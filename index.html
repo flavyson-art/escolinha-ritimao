@@ -151,7 +151,7 @@
 
 <script>
     // --- CONFIGURAÇÃO ---
-    const URL_PLANILHA = "https://script.google.com/macros/s/AKfycbz02UqSrJ694G6hRkVwLkr_wA28-juV9C0zNh-TQvI8lkV_n0xgH0kRP8MhJ-rCCXEY/exec"; 
+    const URL_PLANILHA = "https://script.google.com/macros/s/AKfycbz-EKSpDTJiAVaMl7po1sPTaDJSG1iW2lCe7bpCg5o8NLHBwnmUog6H4V9VrMx6yUCt/exec"; 
 
     function verificarIdade(idade) {
         const secao = document.getElementById('secaoResponsavel');
@@ -194,22 +194,20 @@
                 fotoBase64: fotoBase64
             };
 
-            await fetch(URL_PLANILHA, {
-                method: 'POST',
-                mode: 'no-cors',
-                body: JSON.stringify(dados)
-            });
+            const response = await fetch(URL_PLANILHA, {
+				method: 'POST',
+				body: JSON.stringify(dados)
+			});
 
-            alert("✅ Cadastro realizado com sucesso na Ritimão!");
-            document.getElementById('formCadastro').reset();
-            verificarIdade(0);
-        } catch (erro) {
-            alert("Erro ao enviar cadastro. Verifique a conexão.");
-        } finally {
-            btn.disabled = false;
-            btn.innerText = "Concluir Cadastro";
-        }
-    });
+			const resultado = await response.json();
+
+			if (resultado.result === "success") {
+				alert("✅ " + resultado.message);
+				document.getElementById('formCadastro').reset();
+				verificarIdade(0);
+			} else {
+				alert("❌ Erro: " + resultado.message);
+			}
 	
 	// Máscara de CPF (000.000.000-00)
 		document.getElementById('cpf').addEventListener('input', function (e) {
